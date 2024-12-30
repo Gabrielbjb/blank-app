@@ -155,7 +155,7 @@ def get_initial_food_choice(data):
                 st.write("Detail makanan yang sesuai:")
                 for _, row in suggestions.iterrows():
                     st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}")
-                    display(Image(url=row['image'], width=300, height=300))
+                    st.image(row['image'], width=300)
                 return suggestions['name'].iloc[0]
             else:
                 st.write(f"Makanan '{food_choice}' tidak ditemukan dalam daftar acak. Coba lagi.")
@@ -168,7 +168,7 @@ def get_initial_food_choice(data):
                 st.write("Detail makanan yang sesuai:")
                 for _, row in suggestions.iterrows():
                     st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}")
-                    display(Image(url=row['image'], width=300, height=300))
+                    st.image(row['image'], width=300)
                 return suggestions['name'].iloc[0]
             else:
                 st.write(f"Makanan '{food_choice}' tidak ditemukan dalam database. Coba lagi.")
