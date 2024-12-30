@@ -138,16 +138,19 @@ def get_initial_food_choice(data):
 
         while True:
             food_choice = st.text_input(label="Masukkan nama makanan favorit Anda dari daftar di atas:", key="food_choice_input").strip()
-            if food_choice != None:
-                suggestions = suggest_foods(food_choice, random_foods)
-                if len(suggestions) > 0:
-                    st.write("Detail makanan yang sesuai:")
-                    for _, row in suggestions.iterrows():
-                        st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}")
-                        st.image(row['image'], width=300)
-                    return suggestions['name'].iloc[0]
-                else:
-                    st.write(f"Makanan '{food_choice}' tidak ditemukan dalam daftar acak. Coba lagi.")
+            submit_button_2 = st.button(label='Submit')
+            if submit_button_2 and food_choice:  
+                if food_choice is not None:
+                    suggestions = suggest_foods(food_choice, random_foods)
+                    if len(suggestions) > 0:
+                        st.write("Detail makanan yang sesuai:")
+                        for _, row in suggestions.iterrows():
+                            st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}")
+                            st.image(row['image'], width=300)
+                        break  # Keluar dari loop jika makanan ditemukan
+                    else:
+                        st.write(f"Makanan '{food_choice}' tidak ditemukan dalam daftar acak. Coba lagi.")
+
 
     elif choice == '2':
         while True:
