@@ -124,7 +124,7 @@ def get_initial_food_choice(data):
     st.write("2. Masukkan nama makanan favorit Anda untuk rekomendasi.")
     st.write("3. Gunakan preferensi nutrisi untuk rekomendasi awal.")
 
-    choice = st.text_input("Masukkan pilihan Anda (1/2/3): ").strip()
+    choice = st.text_input(label="Masukkan pilihan Anda (1/2/3): ").strip()
 
     if choice == '1':
         st.write("Daftar makanan secara acak:")
