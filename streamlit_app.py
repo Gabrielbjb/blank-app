@@ -7,7 +7,6 @@ import difflib
 import kagglehub
 import os
 
-# Unduh dataset menggunakan kagglehub
 st.write("Mengunduh dataset dari Kaggle...")
 path = kagglehub.dataset_download("anasfikrihanif/indonesian-food-and-drink-nutrition-dataset")
 st.write("Path ke file dataset:", path)
