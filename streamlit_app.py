@@ -154,16 +154,15 @@ def get_initial_food_choice(data):
     elif choice == '2':
         while True:
             food_choice = st.text_input("Masukkan nama makanan favorit Anda: ").strip()
-            if food_choice != "":
-                suggestions = suggest_foods(food_choice, data)
-                if len(suggestions) > 0:
-                    st.write("Detail makanan yang sesuai:")
-                    for _, row in suggestions.iterrows():
-                        st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}")
-                        st.image(row['image'], width=300)
-                    return suggestions['name'].iloc[0]
-                else:
-                    st.write(f"Makanan '{food_choice}' tidak ditemukan dalam database. Coba lagi.")
+            suggestions = suggest_foods(food_choice, data)
+            if len(suggestions) > 0:
+                st.write("Detail makanan yang sesuai:")
+                for _, row in suggestions.iterrows():
+                    st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}")
+                    st.image(row['image'], width=300)
+                return suggestions['name'].iloc[0]
+            else:
+                st.write(f"Makanan '{food_choice}' tidak ditemukan dalam database. Coba lagi.")
 
     elif choice == '3':
         preferences = {
