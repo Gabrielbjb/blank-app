@@ -82,7 +82,7 @@ def display_food_details_with_image(food_details):
     st.write(food_details[['name', 'calories', 'proteins', 'fat', 'carbohydrate']])
     image_url = food_details['image'].values[0]
     if image_url != "Unknown":
-        display(Image(url=image_url, width=300, height=300))
+        st.image(row['image'], width=300)
     else:
         st.write("Gambar tidak tersedia untuk makanan ini.")
 
@@ -132,7 +132,7 @@ def get_initial_food_choice(data):
         for _, row in random_foods.iterrows():
             st.write(f"Nama: {row['name']}")
             if row['image'] != "Unknown":
-                display(HTML(f'<img src="{row["image"]}" alt="{row["name"]}" style="width:300px;height:auto;">'))
+                st.image(row['image'], width=300)
             else:
                 st.write("Gambar tidak tersedia.")
 
@@ -193,7 +193,7 @@ if user_food_choice:
     if show_details == 'ya':
         for _, row in recommended_foods.iterrows():
             st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}, Similarity: {row['Similarity']}")
-            display(Image(url=row['image'], width=300, height=300))
+            st.image(row['image'], width=300)
     else:
         st.write(recommended_foods[['name', 'Similarity', 'calories', 'fat', 'carbohydrate']].to_string(index=False))
 
