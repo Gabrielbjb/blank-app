@@ -138,7 +138,7 @@ def get_initial_food_choice(data):
 
         while True:
             food_choice = st.text_input("Masukkan nama makanan favorit Anda dari daftar di atas: ").strip()
-            if food_choice != "":
+            if food_choice != None:
                 suggestions = suggest_foods(food_choice, random_foods)
                 if len(suggestions) > 0:
                     st.write("Detail makanan yang sesuai:")
