@@ -148,6 +148,8 @@ def get_initial_food_choice(data):
                     return suggestions['name'].iloc[0]
                 else:
                     st.write(f"Makanan '{food_choice}' tidak ditemukan dalam daftar acak. Coba lagi.")
+            else:
+                st.stop()
 
     elif choice == '2':
         while True:
