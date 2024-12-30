@@ -186,7 +186,7 @@ def get_initial_food_choice(data):
 
 if not data.isnull().values.any():
     user_food_choice = get_initial_food_choice(data)
-    if user_food_choice:
+    if user_food_choice is not None:
         recommended_foods = recommend_food(user_food_choice, top_n=3)
         show_details = st.text_input("Apakah Anda ingin melihat detail setiap rekomendasi? (ya/tidak): ").strip().lower()
     
