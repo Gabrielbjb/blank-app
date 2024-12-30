@@ -138,8 +138,8 @@ def get_initial_food_choice(data):
 
         while True:
             food_choice = st.text_input(label="Masukkan nama makanan favorit Anda dari daftar di atas: ").strip()
-            submit_button = st.button(label='Submit')
-            if submit_button and food_choice:  
+            submit_button_2 = st.button(label='Submit')
+            if submit_button_2 and food_choice:  
                 if food_choice != None:
                     suggestions = suggest_foods(food_choice, random_foods)
                     if len(suggestions) > 0:
