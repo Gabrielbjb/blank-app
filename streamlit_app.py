@@ -124,7 +124,7 @@ def get_initial_food_choice(data):
     st.write("2. Masukkan nama makanan favorit Anda untuk rekomendasi.")
     st.write("3. Gunakan preferensi nutrisi untuk rekomendasi awal.")
 
-    choice = st.text_input(label="Masukkan pilihan Anda (1/2/3): ").strip()
+    choice = st.text_input(label="Masukkan pilihan Anda (1/2/3): ", key="user_choice").strip()
 
     if choice == '1':
         st.write("Daftar makanan secara acak:")
@@ -137,19 +137,17 @@ def get_initial_food_choice(data):
                 st.write("Gambar tidak tersedia.")
 
         while True:
-            food_choice = st.text_input(label="Masukkan nama makanan favorit Anda dari daftar di atas: ").strip()
-            submit_button_2 = st.button(label='Submit')
-            if submit_button_2 and food_choice:  
-                if food_choice != None:
-                    suggestions = suggest_foods(food_choice, random_foods)
-                    if len(suggestions) > 0:
-                        st.write("Detail makanan yang sesuai:")
-                        for _, row in suggestions.iterrows():
-                            st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}")
-                            st.image(row['image'], width=300)
-                        return suggestions['name'].iloc[0]
-                    else:
-                        st.write(f"Makanan '{food_choice}' tidak ditemukan dalam daftar acak. Coba lagi.")
+            food_choice = st.text_input(label="Masukkan nama makanan favorit Anda dari daftar di atas:", key="food_choice_input").strip()
+            if food_choice != None:
+                suggestions = suggest_foods(food_choice, random_foods)
+                if len(suggestions) > 0:
+                    st.write("Detail makanan yang sesuai:")
+                    for _, row in suggestions.iterrows():
+                        st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}")
+                        st.image(row['image'], width=300)
+                    return suggestions['name'].iloc[0]
+                else:
+                    st.write(f"Makanan '{food_choice}' tidak ditemukan dalam daftar acak. Coba lagi.")
 
     elif choice == '2':
         while True:
