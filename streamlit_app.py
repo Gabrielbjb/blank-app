@@ -144,7 +144,6 @@ def get_initial_food_choice(data):
             st.write(f"Nama: {row['name']}")
             if row['image'] != "Unknown":
                 st.image(row['image'], width=300)
-                st.write(f'<img src="{row["image"]}" alt="{row["name"]}" style="width:300px;height:auto;">')
             else:
                 st.write("Gambar tidak tersedia.")
 
