@@ -8,10 +8,7 @@ import kagglehub
 import os
 
 # Unduh dataset menggunakan kagglehub
-st.write("Mengunduh dataset dari Kaggle...")
 path = kagglehub.dataset_download("anasfikrihanif/indonesian-food-and-drink-nutrition-dataset")
-st.write("Path ke file dataset:", path)
-
 # Dapatkan daftar file CSV di folder dataset
 file_names = [file for file in os.listdir(path) if file.endswith('.csv')]
 
@@ -21,7 +18,6 @@ data_frames = []
 # Membaca setiap file CSV dan menambahkannya ke dalam list
 for file_name in file_names:
     file_path = os.path.join(path, file_name)
-    st.write(f"Membaca file: {file_path}")
     df = pd.read_csv(file_path)
     data_frames.append(df)
 
@@ -31,10 +27,6 @@ combined_data = pd.concat(data_frames, ignore_index=True)
 # Pilih kolom yang relevan
 columns_to_keep = ['id', 'calories', 'proteins', 'fat', 'carbohydrate', 'name', 'image']
 combined_data = combined_data[columns_to_keep]
-
-# Identifikasi nilai null
-st.write("Jumlah nilai null di setiap kolom:")
-st.write(combined_data.isnull().sum())
 
 # Isi nilai null
 numerical_cols = ['calories', 'proteins', 'fat', 'carbohydrate']
@@ -56,10 +48,6 @@ combined_data = combined_data.groupby('name', as_index=False).agg({
 # Normalisasi kolom numerik
 scaler = MinMaxScaler()
 combined_data[numerical_cols] = scaler.fit_transform(combined_data[numerical_cols])
-
-# Tampilkan data setelah cleansing
-st.write("Data setelah cleansing:")
-st.write(combined_data.head())
 
 # Gunakan data gabungan untuk rekomendasi makanan
 data = combined_data
