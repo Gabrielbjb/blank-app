@@ -124,12 +124,12 @@ def get_initial_food_choice(data):
     st.write("2. Masukkan nama makanan favorit Anda untuk rekomendasi.")
     st.write("3. Gunakan preferensi nutrisi untuk rekomendasi awal.")
 
-    choice = st.text_input(label="Masukkan pilihan Anda (1/2/3): ", key="user_choice").strip()
+    choice = st.text_input(label="Masukkan pilihan Anda (1/2/3): ").strip()
 
     if choice == '1':
         st.write("Daftar makanan secara acak:")
-        random_foods = data.sample(10)
-        for _, row in random_foods.iterrows():
+        random_foods = data.sample(10).reset_index(drop=True)
+        for idx, row in random_foods.iterrows():
             st.write(f"Nama: {row['name']}")
             if row['image'] != "Unknown":
                 st.image(row['image'], width=300)
@@ -137,24 +137,28 @@ def get_initial_food_choice(data):
                 st.write("Gambar tidak tersedia.")
 
         while True:
-            food_choice = st.text_input(label="Masukkan nama makanan favorit Anda dari daftar di atas:", key="food_choice_input").strip()
-            submit_button_2 = st.button(label='Submit')
-            if submit_button_2 and food_choice:  
-                if food_choice is not None:
-                    suggestions = suggest_foods(food_choice, random_foods)
-                    if len(suggestions) > 0:
-                        st.write("Detail makanan yang sesuai:")
-                        for _, row in suggestions.iterrows():
-                            st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}")
-                            st.image(row['image'], width=300)
-                        break  # Keluar dari loop jika makanan ditemukan
-                    else:
-                        st.write(f"Makanan '{food_choice}' tidak ditemukan dalam daftar acak. Coba lagi.")
-
+            food_choice = st.text_input(
+                label="Masukkan nama makanan favorit Anda dari daftar di atas:",
+                key=f"food_choice_input_{idx}"  # Key dinamis
+            ).strip()
+            submit_button_2 = st.button(label='Submit', key=f"submit_button_{idx}")
+            if submit_button_2 and food_choice:
+                suggestions = suggest_foods(food_choice, random_foods)
+                if len(suggestions) > 0:
+                    st.write("Detail makanan yang sesuai:")
+                    for _, row in suggestions.iterrows():
+                        st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}")
+                        st.image(row['image'], width=300)
+                    break  # Keluar dari loop jika makanan ditemukan
+                else:
+                    st.write(f"Makanan '{food_choice}' tidak ditemukan dalam daftar acak. Coba lagi.")
 
     elif choice == '2':
         while True:
-            food_choice = st.text_input("Masukkan nama makanan favorit Anda: ").strip()
+            food_choice = st.text_input(
+                "Masukkan nama makanan favorit Anda: ",
+                key="favorite_food_input"
+            ).strip()
             suggestions = suggest_foods(food_choice, data)
             if len(suggestions) > 0:
                 st.write("Detail makanan yang sesuai:")
@@ -182,6 +186,7 @@ def get_initial_food_choice(data):
             display_food_details_with_image(food_details)
             st.write(f"Rekomendasi awal berdasarkan preferensi: {food_choice}")
             return food_choice
+
 
 # Main Program
 
