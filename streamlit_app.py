@@ -1,4 +1,3 @@
-import streamlit as st
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import MinMaxScaler
@@ -8,7 +7,10 @@ import kagglehub
 import os
 
 # Unduh dataset menggunakan kagglehub
+st.write("Mengunduh dataset dari Kaggle...")
 path = kagglehub.dataset_download("anasfikrihanif/indonesian-food-and-drink-nutrition-dataset")
+st.write("Path ke file dataset:", path)
+
 # Dapatkan daftar file CSV di folder dataset
 file_names = [file for file in os.listdir(path) if file.endswith('.csv')]
 
@@ -18,6 +20,7 @@ data_frames = []
 # Membaca setiap file CSV dan menambahkannya ke dalam list
 for file_name in file_names:
     file_path = os.path.join(path, file_name)
+    st.write(f"Membaca file: {file_path}")
     df = pd.read_csv(file_path)
     data_frames.append(df)
 
@@ -27,6 +30,10 @@ combined_data = pd.concat(data_frames, ignore_index=True)
 # Pilih kolom yang relevan
 columns_to_keep = ['id', 'calories', 'proteins', 'fat', 'carbohydrate', 'name', 'image']
 combined_data = combined_data[columns_to_keep]
+
+# Identifikasi nilai null
+st.write("Jumlah nilai null di setiap kolom:")
+st.write(combined_data.isnull().sum())
 
 # Isi nilai null
 numerical_cols = ['calories', 'proteins', 'fat', 'carbohydrate']
@@ -48,6 +55,10 @@ combined_data = combined_data.groupby('name', as_index=False).agg({
 # Normalisasi kolom numerik
 scaler = MinMaxScaler()
 combined_data[numerical_cols] = scaler.fit_transform(combined_data[numerical_cols])
+
+# Tampilkan data setelah cleansing
+st.write("Data setelah cleansing:")
+st.write(combined_data.head())
 
 # Gunakan data gabungan untuk rekomendasi makanan
 data = combined_data
@@ -133,26 +144,25 @@ def get_initial_food_choice(data):
             st.write(f"Nama: {row['name']}")
             if row['image'] != "Unknown":
                 st.image(row['image'], width=300)
+                st.write(f'<img src="{row["image"]}" alt="{row["name"]}" style="width:300px;height:auto;">')
             else:
                 st.write("Gambar tidak tersedia.")
 
         while True:
-            food_choice = st.text_input(label="Masukkan nama makanan favorit Anda dari daftar di atas:").strip()
-            if food_choice is not None:
-                suggestions = suggest_foods(food_choice, random_foods)
-                if len(suggestions) > 0:
-                    st.write("Detail makanan yang sesuai:")
-                    for _, row in suggestions.iterrows():
-                        st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}")
-                        st.image(row['image'], width=300)
-                    break  # Keluar dari loop jika makanan ditemukan
-                else:
-                    st.write(f"Makanan '{food_choice}' tidak ditemukan dalam daftar acak. Coba lagi.")
-
+            food_choice = st.text_input(label="Masukkan nama makanan favorit Anda dari daftar di atas: ").strip()
+            suggestions = suggest_foods(food_choice, random_foods)
+            if len(suggestions) > 0:
+                st.write("Detail makanan yang sesuai:")
+                for _, row in suggestions.iterrows():
+                    st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}")
+                    st.image(row['image'], width=300)
+                return suggestions['name'].iloc[0]
+            else:
+                st.write(f"Makanan '{food_choice}' tidak ditemukan dalam daftar acak. Coba lagi.")
 
     elif choice == '2':
         while True:
-            food_choice = st.text_input("Masukkan nama makanan favorit Anda: ").strip()
+            food_choice = st.text_input(label="Masukkan nama makanan favorit Anda: ").strip()
             suggestions = suggest_foods(food_choice, data)
             if len(suggestions) > 0:
                 st.write("Detail makanan yang sesuai:")
@@ -183,16 +193,15 @@ def get_initial_food_choice(data):
 
 # Main Program
 
-if not data.isnull().values.any():
-    user_food_choice = get_initial_food_choice(data)
-    if user_food_choice is not None:
-        recommended_foods = recommend_food(user_food_choice, top_n=3)
-        show_details = st.text_input("Apakah Anda ingin melihat detail setiap rekomendasi? (ya/tidak): ").strip().lower()
-    
-        if show_details == 'ya':
-            for _, row in recommended_foods.iterrows():
-                st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}, Similarity: {row['Similarity']}")
-                st.image(row['image'], width=300)
-        else:
-            st.write(recommended_foods[['name', 'Similarity', 'calories', 'fat', 'carbohydrate']].to_string(index=False))
+user_food_choice = get_initial_food_choice(data)
+if user_food_choice:
+    recommended_foods = recommend_food(user_food_choice, top_n=3)
+    show_details = st.text_input(label="Apakah Anda ingin melihat detail setiap rekomendasi? (ya/tidak): ").strip().lower()
 
+    if show_details == 'ya':
+        for _, row in recommended_foods.iterrows():
+            st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}, Similarity: {row['Similarity']}")
+            st.image(row['image'], width=300)
+            st.write(url=row['image'])
+    else:
+        st.write(recommended_foods[['name', 'Similarity', 'calories', 'fat', 'carbohydrate']].to_string(index=False))
