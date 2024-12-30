@@ -184,15 +184,16 @@ def get_initial_food_choice(data):
 
 # Main Program
 
-user_food_choice = get_initial_food_choice(data)
-if user_food_choice:
-    recommended_foods = recommend_food(user_food_choice, top_n=3)
-    show_details = st.text_input("Apakah Anda ingin melihat detail setiap rekomendasi? (ya/tidak): ").strip().lower()
-
-    if show_details == 'ya':
-        for _, row in recommended_foods.iterrows():
-            st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}, Similarity: {row['Similarity']}")
-            st.image(row['image'], width=300)
-    else:
-        st.write(recommended_foods[['name', 'Similarity', 'calories', 'fat', 'carbohydrate']].to_string(index=False))
+if not data.isnull().values.any():
+    user_food_choice = get_initial_food_choice(data)
+    if user_food_choice:
+        recommended_foods = recommend_food(user_food_choice, top_n=3)
+        show_details = st.text_input("Apakah Anda ingin melihat detail setiap rekomendasi? (ya/tidak): ").strip().lower()
+    
+        if show_details == 'ya':
+            for _, row in recommended_foods.iterrows():
+                st.write(f"Nama: {row['name']}, Kalori: {row['calories']}, Lemak: {row['fat']}, Karbohidrat: {row['carbohydrate']}, Similarity: {row['Similarity']}")
+                st.image(row['image'], width=300)
+        else:
+            st.write(recommended_foods[['name', 'Similarity', 'calories', 'fat', 'carbohydrate']].to_string(index=False))
 
